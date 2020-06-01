@@ -6,7 +6,7 @@ void dfs(int v){
     visited[v]=1;
     printf("%d\t",v);
     for(int j=0;j<n;j++){
-        if(M[v][j]==1 && visited[j]==0)
+        if(M[v][j]==1 && visited[j]==0)  //vertex that is adjacent to v and not visited
             dfs(j);
     }
 }
@@ -19,16 +19,16 @@ void bfs(int v){
         v=queue[f++];
         for(int i=0;i<n;i++)
         {
-            if(M[v][i]==1 && visited[i]==0)
+            if(M[v][i]==1 && visited[i]==0) //vertex that is adjacent to v and not visited
             {
                 visited[i]=1;
-                queue[++r]=i;
                 printf("%d\t",i);
+                queue[++r]=i;                
             }
         }
     }
-
 }
+
 int main()
 {
     int i,j,v,count=1,flag=0;
@@ -44,28 +44,32 @@ int main()
     scanf("%d",&v);
     printf("\nDFS\n");
     dfs(v);
-    for(i=0;i<n;i++){
+  
+    for(i=0;i<n;i++){       //if graph is connecetd then in first time all value of the vivisted array will become one.
         if(visited[i]==0){
             dfs(i);
             count++;
         }
     }
+    
     if(count==1) printf("Connected graph\n");
     else printf("Disconnected graph with %d components\n",count);
+    
     count=1;
     for(i=0;i<n;i++)
         visited[i]=0;
     printf("\nBFS\n");
     bfs(v);
+    
     for(i=0;i<n;i++){
         if(visited[i]==0){
             dfs(i);
             count++;
         }
     }
+    
     if(count==1) printf("Connected graph\n");
     else printf("Disconnected graph with %d components\n",count);
-    count=1;
 
     return 0;
 }
