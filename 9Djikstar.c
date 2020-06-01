@@ -1,60 +1,65 @@
-Program 9: Dijkstra’ s Algorithm– Single source shortest path
-
+#include <stdbool.h>
+#include <limits.h>
 #include <stdio.h>
+int V;
+int minDistance(int dist[], bool sptSet[])
+{
+	int min = INT_MAX, min_index;
 
-# define INFINITY 999
+	for (int v = 0; v < V; v++)
+		if (sptSet[v] == false && dist[v] <= min)
+			min = dist[v], min_index = v;
 
-void dijk(int cost[10][10], int n, int source, int v[10], int d[10]) {
-    int least, i, j, u;
-
-    v[source] = 1;
-
-    for (i = 1; i <= n; i++) {
-
-      least = INFINITY;
-      for (j = 1; j <= n; j++) {
-        if (v[j] == 0 && d[j] < least) {
-          least = d[j];
-          u = j;
+	return min_index;
+}
+int printSolution(int dist[])
+{
+	printf("Vertex \t\t Distance from Source\n");
+	for (int i = 0; i < V; i++)
+		printf("%d \t\t %d\n", i, dist[i]);
+}
+void dijkstra(int graph[V][V], int src)
+{
+	int dist[V];
+	bool sptSet[V]; //vertices in spanning tree
+	for (int i = 0; i < V; i++)
+		dist[i] = INT_MAX, sptSet[i] = false;
+	dist[src] = 0;
+	for (int count = 0; count < V - 1; count++) { //until all vertices are not included (V-1 because because source is already included)
+		int u = minDistance(dist, sptSet);
+		sptSet[u] = true;
+		for (int v = 0; v < V; v++)
+			if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX
+				&& dist[u] + graph[u][v] < dist[v])
+				dist[v] = dist[u] + graph[u][v];
+	}
+	printSolution(dist);
+}
+int main()
+{
+	int i,j;
+    printf("\nEnter number of vertices\n");
+    scanf("%d",&V);
+    int graph[V][V];
+    printf("\nInsert Adjacency Matrix\n");
+    for(i=0;i<V;i++)
+    {
+        for(j=0;j<V;j++)
+        {
+            scanf("%d",&graph[i][j]);
         }
-      }
-
-      v[u] = 1;
-
-      for (j = 1; j <= n; j++) {
-        if (v[j] == 0 && (d[j] > (d[u] + cost[u][j])))
-          d[j] = d[u] + cost[u][j];
-      }
     }
-
-    int main() {
-      int n; //no. of nodes
-      int cost[10][10]; //Adjacency matrix of graph
-      int source;
-      int v[10];
-      int d[10];
-      int i, j;
-
-      printf("Enter n: ");
-      scanf("%d", & n);
-
-      printf("Enter Cost matrix: \n");
-      for (i = 1; i <= n; i++)
-        for (j = 1; j <= n; j++)
-          scanf("%d", & cost[i][j]);
-
-      printf("Enter Source: ");
-      scanf("%d", & source);
-
-      for (i = 1; i <= n; i++) {
-        d[i] = cost[source][i];
-        v[i] = 0;
-      }
-
-      dijk(cost, n, source, v, d);
-
-      printf("Shortest distance from source %d\n\n", source);
-      for (i = 1; i <= n; i++)
-        printf("%d --> %d = %d \n\n", source, i, d[i]);
-      return 0;
-    }
+	dijkstra(graph, 0);
+	return 0;
+}
+/*
+1) Create a set sptSet (shortest path tree set) that keeps track of vertices included in shortest path tree, 
+i.e., whose minimum distance from source is calculated and finalized. Initially, this set is empty.
+2) Assign a distance value to all vertices in the input graph. Initialize all distance values as INFINITE. 
+Assign distance value as 0 for the source vertex so that it is picked first.
+3) While sptSet doesn’t include all vertices
+….a) Pick a vertex u which is not there in sptSet and has minimum distance value.
+….b) Include u to sptSet.
+….c) Update distance value of all adjacent vertices of u. To update the distance values, iterate through all adjacent vertices. 
+For every adjacent vertex v, if sum of distance value of u (from source) and weight of edge u-v, is less than the distance value of v, then update the distance value of v.
+*/
