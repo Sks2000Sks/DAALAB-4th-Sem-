@@ -1,97 +1,95 @@
-  
 #include<stdio.h>
 #include<stdlib.h>
-int count = 0;
-void print(int a[], int size){
-        int i;
-        printf("\nArray::\n");
-        for(i=0; i<size; i++)
-                printf("%d  ", a[i]);
-        printf("\n\n");
+#define max 1000
+int count;
+int partition (int a[max],int low,int high)
+{
+	int i,j,pivot,temp;
+
+	i=low+1;
+	j=high;
+	pivot=a[low];
+	while(1)
+	{
+		while (pivot>=a[i] && i<high)
+		{
+			i++;
+			count++;
+		}
+		while (pivot<a[j])
+		{ 
+			j--;
+			count++;
+		}
+		count++;
+		if (i<j)  //swap i and j
+		{
+			temp=a[i];
+			a[i]=a[j];
+			a[j]=temp;
+		}
+		else   //swap pivot and j
+		{
+			temp=a[low];
+			a[low]=a[j];
+			a[j]=temp;
+			return j;
+		}
+	}
 }
 
-void swap(int a[], int i, int j){
-/*      
-        a[i] = a[i] + a[j];
-        a[j] = a[i] - a[j];
-        a[i] = a[i] - a[j];
-*/
-        int temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
-//      count++;
-//      print(a, 5);    
+void quicksort(int a[],int low, int high)
+{
+	int j;
+	if (low<high)
+	{
+		j=partition(a,low,high);   //return the position of pivot element after placing it in its correct position.
+		quicksort(a,low,j-1);     //recursively sorts the left part
+		quicksort(a,j+1,high);    //recursively sorts the right part
+	}
 }
 
-int partition(int a[], int low, int high){
-    int pivot = a[low];
-    int i = low, j = high;
-//      printf("pivot = %d\n", pivot);
+int main()
+{
+	int n,i,j,a[max],b[max],c[max],n1,n2,n3;
+	printf("Enter the number of elements in the array:");
+	scanf("%d",&n);
+	printf("Enter the array elements:\n");
+	for (i=0;i<n;i++)
+	{
+		printf("Element:");
+		scanf("%d",&a[i]);	
+	}
+	count=0;
+	quicksort(a,0,n-1);
+	printf("Sorted array:\n");
+	for (i=0;i<n;i++)
+	{
+		printf("%d ",a[i]);
+	}
 
-    while(i<j){
-        while(a[i] <= pivot && i<high){
-            count++;
-            i++;
-        }
-        while(a[j] > pivot){
-            j--;
-            count++;
-        }
-        if(i<j){
-//          printf("pivot = %d\n", pivot);
-            count++;
-            swap(a, i, j);
-//          print(a, 5);
-        }
-    }
-    count++;
-    swap(a, low, j);
-    return j;
-}
-
-void quickSort(int a[], int low, int high){
-    int j;
-    if(low<high){
-//      printf("divide\n");
-        count++;
-        j = partition(a, low, high);
-//      printf("quik\n");
-        quickSort(a, low, j-1);
-        quickSort(a, j+1, high);
-    }
-    return;
-}
-                
-int main(){
-    int a[] = {1,3,5,4,2}, A[600], B[600], C[600];
-    int i,j;
-    print(a,5);
-    quickSort(a, 0, 4);
-    print(a,5);
-    printf("\nCount = %d\n", count);
-    for(i=16; i<520; i*=2){
-        for(j=0; j<i; j++){
-                A[j] = j;
-                B[j] = i-j;
-                C[j] = rand() % i;
-        }
-//              for(j=0;j<16;j++)
-//              {
-//                      A[i]=j+1;
-//                      B[i]=32-j;
-//                      C[i]=rand()%25;
-//              }
-            printf("\ni = %d\n", i);
-            count = 0;
-            quickSort(A, 0, j-1);
-            printf("Count for ASC = %d\n", count);
-            count = 0;
-            quickSort(B, 0, j-1);
-            printf("Count for DESC = %d\n", count);
-            count = 0;
-            quickSort(C, 0, j-1);
-            printf("Count for RAND = %d\n", count);
-            printf("\n\n");
-    }
-    return 0;
+	printf("\nCount: %d",count);
+	
+	printf("\n\n\tAscending\tDEscending\tRandom\n");
+	for (i=16;i<600;i*=2)
+	{
+		for (j=0;j<i;j++)
+		{
+			a[j]=j;
+			b[j]=i-j;
+			c[j]=rand();
+		
+		}
+		count=0;
+		quicksort(a,0,i-1);
+		n1=count;
+		count=0;
+		quicksort(b,0,i-1);
+		n2=count;
+		count=0;
+		quicksort(c,0,i-1);
+		n3=count;
+		printf("%d\t%d\t\t%d\t\t%d\n",i,n1,n2,n3);
+	}
+	return 0;	
 }
