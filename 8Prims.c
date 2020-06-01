@@ -55,6 +55,6 @@ int main()
             scanf("%d",&graph[i][j]);
         }
     }
-	dijkstra(graph, 0);
+	primMST(graph); 
 	return 0;
 }
