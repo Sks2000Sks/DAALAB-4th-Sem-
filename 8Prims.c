@@ -1,61 +1,60 @@
-Program 8: Prim’ s Algorithm– to find spanning tree
+#include <limits.h>
+#include <stdbool.h>
+#include <stdio.h>
+#define V 5
+int minKey(int key[], bool mstSet[])
+{
+	int min = INT_MAX, min_index;
 
-#include<stdio.h>
-
-#define INFINITY 999
-
-void prims(int n, int cost[10][10], int source) {
-  int v[10]; //visited . keeps track to nodes visited and not
-  int d[10]; //distance. keeps latest shortest distance from source
-  int i, j; //index variables
-  int vertex[10]; //keeps track of nearest node to spanning tree
-  int u, least, sum = 0;
-
-  //1. Initialisation
-  for (i = 1; i <= n; i++) {
-    v[i] = 0; //visited array
-    d[i] = cost[source][i]; //distance array
-    vertex[i] = source; //nearest node to spanning tree
-  }
-  v[source] = 1; //mark source node as visited
-
-  //2. n iteration
-  for (i = 1; i < n; i++) {
-    least = INFINITY;
-    //2a) Find u and d(u) such that d(u) is least
-    for (j = 1; j <= n; j++) {
-      if (v[j] == 0 && d[j] < least) {
-        least = d[j];
-        u = j;
-      }
-    }
-    //2b) mark node u as visited
-    v[u] = 1;
-    sum += d[u];
-    printf("%d --> %d = %d Sum = %d\n\n", vertex[u], u, d[u], sum);
-    //2c) update d[] array. Explore paths through node u.
-    for (j = 1; j <= n; j++) {
-      if (v[j] == 0 && cost[u][j] < d[j]) {
-        d[j] = cost[u][j];
-        vertex[j] = u;
-      }
-    }
-  }
-  printf("Total cost: %d", sum);
+	for (int v = 0; v < V; v++)
+		if (mstSet[v] == false && key[v] < min)
+			min = key[v], min_index = v;
+	return min_index;
 }
-int main() {
-  int n; //no. of nodes
-  int cost[10][10]; //Adjacency matrix of graph
-  int source; //source node
-  int i, j; //index variables
-  printf("Enter n (no. of nodes): ");
-  scanf("%d", & n);
-  printf("Enter cost matrix:\n ");
-  for (i = 1; i <= n; i++)
-    for (j = 1; j <= n; j++)
-      scanf("%d", & cost[i][j]);
-  printf("Enter Source: ");
-  scanf("%d", & source);
-  prims(n, cost, source);
-  return 0;
+
+int printMST(int parent[], int graph[V][V])
+{
+	printf("Edge \tWeight\n");
+	for (int i = 1; i < V; i++)
+		printf("%d - %d \t%d \n", parent[i], i, graph[i][parent[i]]);
+}
+
+void primMST(int graph[V][V])
+{
+	int parent[V];
+	int key[V]; //weight
+	bool mstSet[V];
+
+	for (int i = 0; i < V; i++)
+		key[i] = INT_MAX, mstSet[i] = false;
+  
+	key[0] = 0;
+	parent[0] = -1; 
+	for (int count = 0; count < V - 1; count++) {
+		int u = minKey(key, mstSet);
+		mstSet[u] = true;
+		for (int v = 0; v < V; v++)
+		  //adjacent and not visited and graph[u][v] is smaller than key[v]
+			if (graph[u][v] && mstSet[v] == false && graph[u][v] < key[v])
+				parent[v] = u, key[v] = graph[u][v];
+	}
+	printMST(parent, graph);
+}
+int main()
+{
+
+  int i,j;
+    printf("\nEnter number of vertices\n");
+    scanf("%d",&V);
+    int graph[V][V];
+    printf("\nInsert Adjacency Matrix\n");
+    for(i=0;i<V;i++)
+    {
+        for(j=0;j<V;j++)
+        {
+            scanf("%d",&graph[i][j]);
+        }
+    }
+	dijkstra(graph, 0);
+	return 0;
 }
