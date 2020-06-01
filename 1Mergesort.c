@@ -1,44 +1,37 @@
 #include<stdio.h>
 #include<stdlib.h>
-int c[10], count = 0;
+int b[10], count = 0;
 void merge(int a[], int low, int mid, int high){
         int i = low, j = mid+1, k = low;
         while(i<=mid && j<=high){
-                if(a[i] < a[j]){
-                        c[k++] = a[i++];
-                        count++;
-//                      printf("inside1\n");
-                }
-                else{
-                        c[k++] = a[j++];
-                        count++;
-//                      printf("inside2\n");
-                }
-        }
-        while(i<=mid){
-                count++;
-                c[k++] = a[i++];
-        }
-        while(j<=high){
-                c[k++] = a[j++];
+                if(a[i] < a[j])
+                        b[k++] = a[i++];
+                else
+                        b[k++] = a[j++];     
                 count++;
         }
-        for(i = low; i<k; i++)
-                a[i] = c[i];
+        while(i<=mid){          //if remaining elements in left array directly copy to b because already sorted
+                b[k++] = a[i++];
+                count++;
+        }
+        while(j<=high){         //if remaining elements in right array directly copy to b because already sorted
+                b[k++] = a[j++];
+                count++;
+        }
+        for(i = low; i<k; i++)  //copy all sorted elements to the original array 
+                a[i] = b[i];
 }
 
 void mergeSort(int a[], int low, int high){
-        int mid = 0;
+        int mid;
 
         if(low<high){
                 count++;
                 mid = (low + high)/2;
-//              printf("mid = %d\n", mid);
-                mergeSort(a, low, mid);
-                 mergeSort(a, mid+1, high);
-                merge(a, low, mid, high);
+                mergeSort(a, low, mid);    //recursively sort the left half
+                mergeSort(a, mid+1, high); //recursively sort the right half
+                merge(a, low, mid, high);  //merge the two sorted halves
         }
-        return;
 }
 
 int main(){
