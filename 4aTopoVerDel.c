@@ -22,23 +22,23 @@ int main()
     }
 
     for(i=0;i<n;i++){
-        if(indegree[i]==0){
+        if(indegree[i]==0){  //check for a vertex with indegree 0
            flag=1;
            break;
         }
     }
     if(flag==1){
         for(i=0;i<n;i++){
-             if(indegree[i]==0)
+             if(indegree[i]==0)    //add all such vertices to a stack
                 stack[++top]=i;
         }
         while(top!=-1){
-            nd=stack[top--];
-            result[k++]=nd;
-            vis[nd]=1;
+            nd=stack[top--];     //remove vertex from stack which will be having indegree 0
+            result[k++]=nd;     //print it
+            vis[nd]=1;          //mark as visited 
             for(i=0;i<n;i++){
                 if(A[nd][i]==1)
-                    indegree[i]--;
+                    indegree[i]--;      //remove edges which are emerging from the 0 indegree vertices
              }
              for(i=0;i<n;i++)
                 if(indegree[i]==0 && vis[i]==0)
