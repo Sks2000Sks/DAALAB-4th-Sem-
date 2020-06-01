@@ -2,13 +2,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #define V 5
-int minKey(int key[], bool mstSet[])
+int minKey(int weight[], bool mstSet[])
 {
 	int min = INT_MAX, min_index;
 
 	for (int v = 0; v < V; v++)
-		if (mstSet[v] == false && key[v] < min)
-			min = key[v], min_index = v;
+		if (mstSet[v] == false && weight[v] < min)
+			min = weight[v], min_index = v;
 	return min_index;
 }
 
@@ -31,7 +31,7 @@ void primMST(int graph[V][V])
 	weight[0] = 0;
 	parent[0] = -1; 
 	for (int count = 0; count < V - 1; count++) {
-		int u = minKey(key, mstSet);
+		int u = minKey(weight, mstSet);
 		mstSet[u] = true;
 		for (int v = 0; v < V; v++)
 		  //adjacent and not visited and graph[u][v] is smaller than key[v]
