@@ -7,31 +7,34 @@ void heapify(int i)
 {
 	
 	int flag=0,k=i,v=a[i],j;
-	while (!flag && 2*k<=len)
+	while (!flag && 2*k<=len)     
 	{
 		count++;
-		j=2*k;
-		if (j<len)
+		j=2*k;                       //left child node
+		if (j<len)                   //should be withinh the array limit
 		{
-			if (a[j]<a[j+1])
+			if (a[j]<a[j+1])     //if right child is greater then move to right child
 				j=j+1;
 		}
-		if (v>=a[j])
+		if (v>=a[j])                //root is greater than both the children
 			flag=1;
 		else
 		{
-			a[k]=a[j];
+			a[k]=a[j];         //put the grater child into the root node
 			k=j;
 		}
 	}
-	a[k]=v;
+	a[k]=v;        //root value to child node(which was put to root)
+                       //if flag =true then same element will be pu to same element
+	              //root value should be compared with all levels only then it should be placed
+
 }
 
 void heap()
 {
 	int i,t;
 	count++;
-	for (i=len/2.0;i>0;i--)
+	for (i=len/2.0;i>0;i--)    //len/2 mins first internal node starts from here
 	{
 		heapify(i);
 	}
